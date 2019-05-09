@@ -303,3 +303,42 @@ export default class App extends Component {
     }
 }
 ```
+
+
+
+```
+import React, { useState } from 'react';
+
+function Example1(props) {
+    return (
+        <div>
+            <p>这个是购买衣服的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+function Example2(props) {
+    return (
+        <div>
+            <p>这个是购买电脑的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+export default function App() {
+    const [count, setCount] = useState(0);
+    const Example = 1 === 2 ? Example1 : Example2;
+
+    return (
+        <Example count={count} setCount={setCount}/>
+    );
+}
+```
