@@ -181,49 +181,125 @@ export default function Example() {
 
 
 
-
 在react hook出现之前我们是如何复用react的状态逻辑的呢
 第一种  高阶组件的方式
 ```js
+import React, { Component } from 'react';
+
 function Example1(props) {
-  return (
-    <div>
-      <p>这个是购买衣服的页面</p>
-      <p>You clicked {props.count} times</p>
-      <button onClick={props.setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
+    return (
+        <div>
+            <p>这个是购买衣服的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
 }
 
 function Example2(props) {
-  return (
-    <div>
-      <p>这个是购买电脑的页面</p>
-      <p>You clicked {props.count} times</p>
-      <button onClick={props.setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
+    return (
+        <div>
+            <p>这个是购买电脑的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+const withShoppingCard = TargetComponent => {
+    class ShoppingCard extends Component {
+        state = {
+            count: 0
+        };
+
+        setCount = count => {
+            this.setState({ count })
+        };
+
+        render() {
+            return (<TargetComponent count={this.state.count} setCount={this.setCount}/>)
+        }
+    }
+
+    return ShoppingCard;
+};
+
+const HocExample1 = withShoppingCard(Example1);
+const HocExample2 = withShoppingCard(Example2);
+
+export default class App extends Component {
+    render() {
+        const Example = 1 === 2 ? HocExample1 : HocExample2;
+
+        return (
+            <Example/>
+        );
+    }
 }
 ```
 
+
+第二种render props的方式
 ```js
 import React, { Component } from 'react';
 
+function Example1(props) {
+    return (
+        <div>
+            <p>这个是购买衣服的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+function Example2(props) {
+    return (
+        <div>
+            <p>这个是购买电脑的页面</p>
+            <p>You clicked {props.count} times</p>
+            <button onClick={() => props.setCount(props.count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+
+class Shell extends Component {
+    state = {
+        count: 0
+    };
+
+    setCount = count => {
+        this.setState({ count })
+    };
+
+    render() {
+        return (
+            <div>
+                {this.props.render({
+                    count: this.state.count,
+                    setCount: this.setCount
+                })}
+            </div>
+        )
+    }
+}
+
 export default class App extends Component {
-  state = {
-    count: 0
-  }
+    render() {
+        const Example = 1 === 2 ? Example1 : Example2;
 
-  setCount = count => {
-    this.setState({ count })
-  }
-
-  render() {
-    return (<Example count={this.state.count} setCount={this.setCount}></Example>)
-  }
+        return (
+            <Shell
+                render={props => <Example {...props}/>}
+            />);
+    }
 }
 ```
