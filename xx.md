@@ -223,34 +223,47 @@ export default function Example() {
 
 
 #### 5、在react hook出现之前我们是如何复用react的状态逻辑的呢
+
+在我们开发中常常会遇到一些状态复用的时候，试想一下这样的一个场景，你在天猫购买商品的页面，每个页面的UI都是不一样的，但是每个页面的交互大部分是一样的（编辑商品数量、添加到购物车）,这里每个页面的UI展示逻辑我们可以抽象成一个个纯UI组件，但是每个页面的交互逻辑都很类似，我们不可能在每个组件都写一遍交互逻辑的代码，因为万一交互有改动，你可能需要修改很多组件，所以我们需要复用这些交互逻辑。
+
 第一种  高阶组件的方式
+
 ```js
 import React, { Component } from 'react';
 
+// 这是一个简单的购买衣服的页面
 function Example1(props) {
     return (
         <div>
             <p>这个是购买衣服的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
 }
 
+// 这是一个简单的购买电脑的页面
 function Example2(props) {
     return (
         <div>
             <p>这个是购买电脑的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
 }
 
+// 高阶组件 为TargetComponent添加编辑商品数量的逻辑
 const withShoppingCard = TargetComponent => {
     class ShoppingCard extends Component {
         state = {
@@ -269,6 +282,7 @@ const withShoppingCard = TargetComponent => {
     return ShoppingCard;
 };
 
+// 经过withShoppingCard包裹的高阶组件
 const HocExample1 = withShoppingCard(Example1);
 const HocExample2 = withShoppingCard(Example2);
 
@@ -288,30 +302,39 @@ export default class App extends Component {
 ```js
 import React, { Component } from 'react';
 
+// 这是一个简单的购买衣服的页面
 function Example1(props) {
     return (
         <div>
             <p>这个是购买衣服的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
 }
 
+// 这是一个简单的购买电脑的页面
 function Example2(props) {
     return (
         <div>
             <p>这个是购买电脑的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
 }
 
+// 定义了一个带 编辑商品数量的逻辑 的组件，其渲染逻辑依赖父组件 props.render
 class Shell extends Component {
     state = {
         count: 0
@@ -346,29 +369,37 @@ export default class App extends Component {
 ```
 
 
-
+使用react hooks的方式
 ```js
 import React, { useState } from 'react';
 
+// 这是一个简单的购买衣服的页面
 function Example1(props) {
     return (
         <div>
             <p>这个是购买衣服的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
 }
 
+// 这是一个简单的购买电脑的页面
 function Example2(props) {
     return (
         <div>
             <p>这个是购买电脑的页面</p>
-            <p>You clicked {props.count} times</p>
+            <p>你需要购买的数量是：{props.count}</p>
             <button onClick={() => props.setCount(props.count + 1)}>
-                Click me
+                添加
+            </button>
+            <button onClick={() => props.setCount(props.count - 1)}>
+                减少
             </button>
         </div>
     );
