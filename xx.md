@@ -144,6 +144,7 @@ function Example() {
 * 我们写的有状态组件(class)，通常会产生很多的副作用（side effect），比如发起ajax请求获取数据，添加一些监听的注册和取消注册，手动修改dom等等。
 * 我们之前都把这些副作用的函数写在生命周期函数钩子里，比如componentDidMount，componentDidUpdate和componentWillUnmount。而现在的useEffect就相当与这些声明周期函数钩子的集合体。它以一抵三。
 * 同时，由于hooks可以反复多次使用，相互独立。所以我们合理的做法是，给每一个副作用一个单独的useEffect钩子。这样一来，这些副作用不再一股脑堆在生命周期钩子里，代码变得更加清晰。
+* useEffect让组件的生命周期变得更加简洁，不用去区分是第一次渲染完成还是组件更新；只用关心React组件需要在渲染后执行哪些操作。
 
 
 如果使用class组件需要这样来实现
@@ -178,7 +179,7 @@ class Example extends React.Component {
 ```
 * componentDidMount是组件第一次渲染完成的回调；componentDidUpdate组件更新时候的回调；
 * 这两个回调执行的都是同样的逻辑，设置document.title;
-* useEffect让组件的生命周期变得更加简洁，不用去区分是第一次渲染完成还是组件更新；只用关心React组件需要在渲染后执行哪些操作。
+
 
 
 
